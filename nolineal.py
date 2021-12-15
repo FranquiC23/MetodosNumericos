@@ -1,9 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.misc import derivative
+
+from sympy import Symbol
+import math
 import pandas as pd
 
 
-# METODOS ABIERTOS
+# METODOS CERRADOS
 # Metodo de la biseccion
 
 def f(x, pol):
@@ -29,37 +33,184 @@ def biseccion(a, b, tol, pol):
     fx = [] # Lista para guardar los valores de f(x)
     err = [] # Lista para guardar los errores en %
 
-    x.append(a)
+    x.append(round(a, tol+1))
     fx.append(f(a, pol))
-    x.append(b)
+    x.append(round(b, tol+1))
     fx.append(f(b, pol))
     e = abs((b - a) / 2)
-    err.append(e*100)
+    err.append(round(e*100, 4))
 
-
-    while e > tol:
+    #if f(a, pol) * f(b, pol) > 0 and iter[0] == 1:
+    #    print("No hay raiz en el intervalo")
+    #    return iter, cota_inf, cota_sup, x, fx, err
+    #else: 
+    while e > 10**(-1*tol):
         c = (a + b) / 2
-        x.append(c)
+        x.append(round(c, tol+1))
         fx.append(f(c, pol))
         if f(a, pol) * f(c, pol) < 0:
             b = c
         else:
             a = c
 
-        cota_sup.append(b)
-        cota_inf.append(a)
+        cota_sup.append(round(b, tol+1))
+        cota_inf.append(round(a, tol+1))
         e = abs((b - a) / 2)
-        err.append(e*100)
+        err.append(round(e*100, 4))
+        iter.append(iter[-1] + 1)
+    return iter, cota_inf, cota_sup, x, fx, err
+
+# metodo de la falsa posicion
+def falsa_posicion(a, b, tol, pol):
+    iter = [1]  # Lista para guardar los iteraciones
+    cota_inf = [a] # Lista para guardar la cota inferior
+    cota_sup = [b] # Lista para guardar la cota superior
+    x = [] # Lista para guardar los valores de x
+    fx = [] # Lista para guardar los valores de f(x)
+    err = [] # Lista para guardar los errores en %
+
+    x.append(round(a, tol+1))
+    fx.append(f(a, pol))
+    x.append(round(b, tol+1))
+    fx.append(f(b, pol))
+    e = abs((b - a) / 2)
+    err.append(round(e*100, 4))
+
+    #if f(a, pol) * f(b, pol) > 0 and iter[0] == 1:
+    #    print("No hay raiz en el intervalo")
+    #    return iter, cota_inf, cota_sup, x, fx, err
+    #else: 
+    while e > 10**(-1*tol):
+        c = b - (f(b, pol) * (b - a)) / (f(b, pol) - f(a, pol))
+        x.append(round(c, tol+1))
+        fx.append(f(c, pol))
+        if f(a, pol) * f(c, pol) < 0:    
+            b = c
+        else:
+            a = c
+
+        cota_sup.append(round(b, tol+1))
+        cota_inf.append(round(a, tol+1))
+        e = abs((b - a) / 2)
+        err.append(round(e*100, 4))
         iter.append(iter[-1] + 1)
     return iter, cota_inf, cota_sup, x, fx, err
 
 
 
+# METODOS ABIERTOS
 
-funcion = 'x**10 -1'
-bis = biseccion(0, 1.4, 0.001, funcion)
-print(bis[3][-1])
-graficar_funcion(funcion, bis[3][-1])
-for b in bis:
-    print(b)
-    print("\n")
+def g(x, pol):
+    pol = "" + pol + "+x"
+    return eval(pol)
+
+# Metodo del punto fijo
+def punto_fijo(x0, tol, pol):
+    iter = [1]  # Lista para guardar los iteraciones
+    x = [] # Lista para guardar los valores de x
+    gx = [] # Lista para guardar los valores de g(x)
+    fx = [] # Lista para guardar los valores de f(x)
+    err = [] # Lista para guardar los errores en %
+
+    gx.append(round(g(x0, pol)))
+
+    x.append(round(x0, tol+1))
+    fx.append(round(f(x0, pol), 4))
+
+    e = abs(gx[0]- x0)
+    err.append(round(e*100, 4))
+
+    while e > 10**(-1*tol):
+        x0 = gx[-1]
+        x.append(round(x0, tol+1))
+        gx.append(round(g(x0, pol), tol+1))
+        fx.append(round(f(x0, pol), tol+1))
+        e = abs(gx[-1] - x0)
+        err.append(round(e*100, 4))
+        iter.append(iter[-1] + 1)
+    return iter, x, gx, fx, err
+
+
+# Metodo de Newton-Raphson
+
+# derivada
+def d(n, pol):
+    x = Symbol('x')
+    f = lambda x: eval(funcion)
+    return derivative(f, n, 0.0001)
+    
+
+def newton_raphson(x0, tol, pol):
+    iter = [1]  # Lista para guardar los iteraciones
+    x = [] # Lista para guardar los valores de x
+    fx = [] # Lista para guardar los valores de f(x)
+    err = [] # Lista para guardar los errores en %
+
+    x.append(round(x0, tol+1))
+    fx.append(round(f(x0, pol), 4))
+
+    e = abs((fx[-1] - x0)/fx[-1])
+    err.append(round(e*100, 4))
+
+    while e > 10**(-1*tol):
+        x0 = x0 - (f(x0, pol) / derivative(f(x0, pol), x0, 0.0001))
+        x.append(round(x0, tol+1))
+        fx.append(round(f(x0, pol), tol+1))
+        e = abs((fx[-1] - x0)/fx[-1])
+        err.append(round(e*100, 4))
+        iter.append(iter[-1] + 1)
+    return iter, x, fx, err
+
+
+
+
+# Metodo de la secante
+def secante(x0, x1, tol, pol):
+    iter = [1]  # Lista para guardar los iteraciones
+    x = [] # Lista para guardar los valores de x
+    fx = [] # Lista para guardar los valores de f(x)
+    err = [] # Lista para guardar los errores en %
+
+    x.append(round(x0, tol+1))
+    fx.append(f(x0, pol))
+    x.append(round(x1, tol+1))
+    fx.append(f(x1, pol))
+    e = abs(fx[0])
+    err.append(round(e*100, 4))
+
+    while e > 10**(-1*tol):
+        x0 = x0 - (f(x0, pol) * (x1 - x0)) / (f(x1, pol) - f(x0, pol))
+        x.append(round(x0, tol+1))
+        fx.append(f(x0, pol))
+        e = abs(fx[-1])
+        err.append(round(e*100, 4))
+        iter.append(iter[-1] + 1)
+    return iter, x, fx, err
+
+
+funcion = '(1/np.exp(x))-x'
+#bis = biseccion(0, 1.4, 0.001, funcion)
+#print(bis[3][-1])
+#graficar_funcion(funcion, bis[3][-1])
+#for b in bis:
+#    print(b)
+#    print("\n")
+
+#fp = falsa_posicion(0, 1.4, 3, funcion)
+#print(fp[3][-1])
+#graficar_funcion(funcion, fp[3][-1])
+#for f in fp:
+#    print(f)
+#    print("\n")
+
+#pf = punto_fijo(1.5, 4, funcion)
+#print(pf[1][-1])
+#graficar_funcion(funcion, pf[1][-1])
+#for p in pf:
+#    print(p)
+#    print("\n")
+
+
+
+
+
