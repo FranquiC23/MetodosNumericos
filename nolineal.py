@@ -25,7 +25,6 @@ def graficar_funcion(pol, xr):
 
 
 def biseccion(a, b, tol, pol):
-    iter = [1]  # Lista para guardar los iteraciones
     cota_inf = [a] # Lista para guardar la cota inferior
     cota_sup = [b] # Lista para guardar la cota superior
     x = [] # Lista para guardar los valores de x
@@ -33,10 +32,10 @@ def biseccion(a, b, tol, pol):
     err = [] # Lista para guardar los errores en %
 
     x.append(round(a, tol+1))
+    print(type(a))
     fx.append(f(a, pol))
-    x.append(round(b, tol+1))
-    fx.append(f(b, pol))
-    e = abs((b - a) / 2)
+
+    e = 1
     err.append(round(e*100, 4))
 
     #if f(a, pol) * f(b, pol) > 0 and iter[0] == 1:
@@ -45,8 +44,9 @@ def biseccion(a, b, tol, pol):
     #else: 
     while e > 10**(-1*tol):
         c = (a + b) / 2
+        e = abs((b - a) / 2)
         x.append(round(c, tol+1))
-        fx.append(f(c, pol))
+        fx.append(round(f(c, pol),tol+1))
         if f(a, pol) * f(c, pol) < 0:
             b = c
         else:
@@ -54,14 +54,13 @@ def biseccion(a, b, tol, pol):
 
         cota_sup.append(round(b, tol+1))
         cota_inf.append(round(a, tol+1))
-        e = abs((b - a) / 2)
+        
         err.append(round(e*100, 4))
-        iter.append(iter[-1] + 1)
-    return iter, cota_inf, cota_sup, x, fx, err
+    return cota_inf, cota_sup, x, fx, err
 
 # metodo de la falsa posicion
 def falsa_posicion(a, b, tol, pol):
-    iter = [1]  # Lista para guardar los iteraciones
+    
     cota_inf = [a] # Lista para guardar la cota inferior
     cota_sup = [b] # Lista para guardar la cota superior
     x = [] # Lista para guardar los valores de x
@@ -70,8 +69,7 @@ def falsa_posicion(a, b, tol, pol):
 
     x.append(round(a, tol+1))
     fx.append(f(a, pol))
-    x.append(round(b, tol+1))
-    fx.append(f(b, pol))
+
     e = abs((b - a) / 2)
     err.append(round(e*100, 4))
 
@@ -92,8 +90,8 @@ def falsa_posicion(a, b, tol, pol):
         cota_inf.append(round(a, tol+1))
         e = abs((b - a) / 2)
         err.append(round(e*100, 4))
-        iter.append(iter[-1] + 1)
-    return iter, cota_inf, cota_sup, x, fx, err
+        
+    return cota_inf, cota_sup, x, fx, err
 
 
 
@@ -105,7 +103,6 @@ def g(x, pol):
 
 # Metodo del punto fijo
 def punto_fijo(x0, tol, pol):
-    iter = [1]  # Lista para guardar los iteraciones
     x = [] # Lista para guardar los valores de x
     gx = [] # Lista para guardar los valores de g(x)
     fx = [] # Lista para guardar los valores de f(x)
@@ -140,7 +137,7 @@ def d(n, pol):
     
 
 def newton_raphson(x0, tol, pol):
-    iter = [0]  # Lista para guardar los iteraciones
+    
     x = [] # Lista para guardar los valores de x
     fx = [] # Lista para guardar los valores de f(x)
     dx = [] # Lista para guardar los valores de f'(x)
@@ -160,16 +157,15 @@ def newton_raphson(x0, tol, pol):
         fx.append(round(f(x0, pol), tol+1))
         dx.append(round(d(x0, pol), tol+1))
         err.append(round(e, tol+1))
-        iter.append(iter[-1] + 1)
+    
 
-    return iter, x, fx, dx, err
+    return x, fx, dx, err
 
 
 
 
 # Metodo de la secante
 def secante(x0, x1, tol, pol):
-    iter = [1]  # Lista para guardar los iteraciones
     x = [] # Lista para guardar los valores de x
     fx = [] # Lista para guardar los valores de f(x)
     err = [] # Lista para guardar los errores en %
@@ -187,17 +183,16 @@ def secante(x0, x1, tol, pol):
         x.append(round(x0, tol+1))
         fx.append(round(f(x0, pol), tol+1))
         err.append(round(e*100, tol+1))
-        iter.append(iter[-1] + 1)
-    return iter, x, fx, err
+    return x, fx, err
 
 
-funcion = '(1/np.exp(x))-x'
-#bis = biseccion(0, 1.4, 0.001, funcion)
-#print(bis[3][-1])
-#graficar_funcion(funcion, bis[3][-1])
-#for b in bis:
-#    print(b)
-#    print("\n")
+funcion = 'x**10-1'
+bis = biseccion(0.1, 1.4, 3, funcion)
+print(bis[3][-1])
+graficar_funcion(funcion, bis[3][-1])
+for b in bis:
+    print((b))
+    print("\n")
 
 #fp = falsa_posicion(0, 1.4, 3, funcion)
 #print(fp[3][-1])
@@ -220,12 +215,12 @@ funcion = '(1/np.exp(x))-x'
 #    print(n)
 #    print("\n")
 
-sec = secante(0, 1.4, 4, funcion)
-print(sec[1][-1])
-graficar_funcion(funcion, sec[1][-1])
-for s in sec:
-    print(s)
-    print("\n")
+#sec = secante(0, 1.4, 4, funcion)
+#print(sec[1][-1])
+#graficar_funcion(funcion, sec[1][-1])
+#for s in sec:
+#    print(s)
+#    print("\n")
 
 
 
