@@ -58,6 +58,7 @@ def biseccion(a, b, tol, pol):
     return cota_inf, cota_sup, x, fx, err
 
 # metodo de la falsa posicion
+
 def falsa_posicion(a, b, tol, pol):
     
     cota_inf = [a] # Lista para guardar la cota inferior
@@ -65,11 +66,11 @@ def falsa_posicion(a, b, tol, pol):
     x = [] # Lista para guardar los valores de x
     fx = [] # Lista para guardar los valores de f(x)
     err = [] # Lista para guardar los errores en %
-
+    tol = int(tol)
     x.append(round(a, tol+1))
     fx.append(f(a, pol))
 
-    e = abs((b - a) / 2)
+    e = abs((b - a) / b)
     err.append(round(e*100, 4))
 
     #if f(a, pol) * f(b, pol) > 0 and iter[0] == 1:
@@ -78,8 +79,12 @@ def falsa_posicion(a, b, tol, pol):
     #else: 
     while e > 10**(-1*tol):
         c = b - (f(b, pol) * (b - a)) / (f(b, pol) - f(a, pol))
+
+        e = abs((c - a) / c)
+        
         x.append(round(c, tol+1))
         fx.append(f(c, pol))
+        
         if f(a, pol) * f(c, pol) < 0:    
             b = c
         else:
@@ -87,12 +92,10 @@ def falsa_posicion(a, b, tol, pol):
 
         cota_sup.append(round(b, tol+1))
         cota_inf.append(round(a, tol+1))
-        e = abs((b - a) / 2)
+        
         err.append(round(e*100, 4))
         
     return cota_inf, cota_sup, x, fx, err
-
-
 
 # METODOS ABIERTOS
 
@@ -107,6 +110,7 @@ def punto_fijo(x0, tol, pol):
     fx = [] # Lista para guardar los valores de f(x)
     err = [] # Lista para guardar los errores en %
 
+    tol = int(tol)
     gx.append(round(g(x0, pol)))
 
     x.append(round(x0, tol+1))
@@ -142,6 +146,7 @@ def newton_raphson(x0, tol, pol):
     dx = [] # Lista para guardar los valores de f'(x)
     err = [] # Lista para guardar los errores en %
 
+    tol = int(tol)
     x.append(round(x0, tol+1))
     fx.append(round(f(x0, pol), tol+1))
 
@@ -169,6 +174,7 @@ def secante(x0, x1, tol, pol):
     fx = [] # Lista para guardar los valores de f(x)
     err = [] # Lista para guardar los errores en %
 
+    tol = int(tol)
     x.append(round(x0, tol+1))
     fx.append(f(x0, pol))
     x.append(round(x1, tol+1))
@@ -186,19 +192,19 @@ def secante(x0, x1, tol, pol):
 
 
 funcion = 'x**10-1'
-bis = biseccion(0.1, 1.4, 3.0, funcion)
-print(bis[3][-1])
-graficar_funcion(funcion, bis[3][-1])
-for b in bis:
-    print((b))
-    print("\n")
-
-#fp = falsa_posicion(0, 1.4, 3, funcion)
-#print(fp[3][-1])
-#graficar_funcion(funcion, fp[3][-1])
-#for f in fp:
-#    print(f)
+#bis = biseccion(0, 1.4, 3.0, funcion)
+#print(bis[2][-1])
+#graficar_funcion(funcion, bis[2][-1])
+#for b in bis:
+#    print((b))
 #    print("\n")
+
+fp = falsa_posicion(0, 1.4, 3, funcion)
+print(fp[2][-1])
+graficar_funcion(funcion, fp[2][-1])
+for f in fp:
+    print(f)
+    print("\n")
 
 #pf = punto_fijo(1.5, 4, funcion)
 #print(pf[1][-1])
