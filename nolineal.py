@@ -80,16 +80,15 @@ def falsa_posicion(a, b, tol, pol):
     while e > 10**(-1*tol):
         c = b - (f(b, pol) * (b - a)) / (f(b, pol) - f(a, pol))
 
-        e = abs((c - a) / c)
-        
         x.append(round(c, tol+1))
         fx.append(f(c, pol))
-        
+        e = abs((c - a) / c)
         if f(a, pol) * f(c, pol) < 0:    
             b = c
         else:
             a = c
 
+        
         cota_sup.append(round(b, tol+1))
         cota_inf.append(round(a, tol+1))
         
@@ -199,7 +198,7 @@ funcion = 'x**10-1'
 #    print((b))
 #    print("\n")
 
-fp = falsa_posicion(0, 1.4, 3, funcion)
+fp = falsa_posicion(0, 2, 3, funcion)
 print(fp[2][-1])
 graficar_funcion(funcion, fp[2][-1])
 for f in fp:
