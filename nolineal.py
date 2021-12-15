@@ -117,15 +117,15 @@ def punto_fijo(x0, tol, pol):
     x.append(round(x0, tol+1))
     fx.append(round(f(x0, pol), 4))
 
-    e = abs(gx[0]- x0)
+    e = 1
     err.append(round(e*100, 4))
 
     while e > 10**(-1*tol):
         x0 = gx[-1]
+        e = abs(gx[-1] - x0)
         x.append(round(x0, tol+1))
         gx.append(round(g(x0, pol), tol+1))
         fx.append(round(f(x0, pol), tol+1))
-        e = abs(gx[-1] - x0)
         err.append(round(e*100, 4))
         iter.append(iter[-1] + 1)
     return iter, x, gx, fx, err
@@ -136,30 +136,34 @@ def punto_fijo(x0, tol, pol):
 # derivada
 def d(n, pol):
     x = Symbol('x')
-    f = lambda x: eval(funcion)
+    f = lambda x: eval(pol)
     return derivative(f, n, 0.0001)
     
 
 def newton_raphson(x0, tol, pol):
-    iter = [1]  # Lista para guardar los iteraciones
+    iter = [0]  # Lista para guardar los iteraciones
     x = [] # Lista para guardar los valores de x
     fx = [] # Lista para guardar los valores de f(x)
+    dx = [] # Lista para guardar los valores de f'(x)
     err = [] # Lista para guardar los errores en %
 
     x.append(round(x0, tol+1))
-    fx.append(round(f(x0, pol), 4))
+    fx.append(round(f(x0, pol), tol+1))
 
-    e = abs((fx[-1] - x0)/fx[-1])
-    err.append(round(e*100, 4))
+    dx.append(round(d(x0, pol), tol+1))
+    e = 100
+    err.append(e)
 
     while e > 10**(-1*tol):
-        x0 = x0 - (f(x0, pol) / derivative(f(x0, pol), x0, 0.0001))
+        x0 = x0 - (fx[-1] / dx[-1])
+        e = abs((x0-x[-1])/x0)
         x.append(round(x0, tol+1))
         fx.append(round(f(x0, pol), tol+1))
-        e = abs((fx[-1] - x0)/fx[-1])
-        err.append(round(e*100, 4))
+        dx.append(round(d(x0, pol), tol+1))
+        err.append(round(e, tol+1))
         iter.append(iter[-1] + 1)
-    return iter, x, fx, err
+
+    return iter, x, fx, dx, err
 
 
 
@@ -174,16 +178,16 @@ def secante(x0, x1, tol, pol):
     x.append(round(x0, tol+1))
     fx.append(f(x0, pol))
     x.append(round(x1, tol+1))
-    fx.append(f(x1, pol))
-    e = abs(fx[0])
-    err.append(round(e*100, 4))
+    fx.append(round(f(x1, pol), tol+1))
+    e = 1
+    err.append(round(e*100, tol+1))
 
     while e > 10**(-1*tol):
         x0 = x0 - (f(x0, pol) * (x1 - x0)) / (f(x1, pol) - f(x0, pol))
+        e = abs(x[-1] - x[-2])
         x.append(round(x0, tol+1))
-        fx.append(f(x0, pol))
-        e = abs(fx[-1])
-        err.append(round(e*100, 4))
+        fx.append(round(f(x0, pol), tol+1))
+        err.append(round(e*100, tol+1))
         iter.append(iter[-1] + 1)
     return iter, x, fx, err
 
@@ -210,7 +214,19 @@ funcion = '(1/np.exp(x))-x'
 #    print(p)
 #    print("\n")
 
+#nr = newton_raphson(0, 10, funcion)
+#print(nr[1][-1])
+#graficar_funcion(funcion, nr[1][-1])
+#for n in nr:
+#    print(n)
+#    print("\n")
 
+sec = secante(0, 1.4, 4, funcion)
+print(sec[1][-1])
+graficar_funcion(funcion, sec[1][-1])
+for s in sec:
+    print(s)
+    print("\n")
 
 
 
