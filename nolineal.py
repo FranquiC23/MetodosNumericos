@@ -30,10 +30,9 @@ def biseccion(a, b, tol, pol):
     x = [] # Lista para guardar los valores de x
     fx = [] # Lista para guardar los valores de f(x)
     err = [] # Lista para guardar los errores en %
-
-    x.append(round(a, tol+1))
-    print(type(a))
-    fx.append(f(a, pol))
+    tol = int(tol)
+    x.append(a)
+    fx.append(round(f(a, pol), tol+1))
 
     e = 1
     err.append(round(e*100, 4))
@@ -187,7 +186,7 @@ def secante(x0, x1, tol, pol):
 
 
 funcion = 'x**10-1'
-bis = biseccion(0.1, 1.4, 3, funcion)
+bis = biseccion(0.1, 1.4, 3.0, funcion)
 print(bis[3][-1])
 graficar_funcion(funcion, bis[3][-1])
 for b in bis:
