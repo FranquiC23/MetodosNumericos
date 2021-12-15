@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 from scipy.misc import derivative
 
 from sympy import Symbol
-import math
-import pandas as pd
 
 
 # METODOS CERRADOS
@@ -22,6 +20,7 @@ def graficar_funcion(pol, xr):
     plt.title("Función")
     plt.plot(x, y)
     plt.plot(xr, 0, marker='o', color='r')
+    plt.savefig('grafica.png')
     plt.show()
 
 
