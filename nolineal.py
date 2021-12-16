@@ -70,7 +70,7 @@ def falsa_posicion(a, b, tol, pol):
     x.append(round(a, tol+1))
     fx.append(f(a, pol))
 
-    e = abs((b - a) / b)
+    e = 1
     err.append(round(e*100, 4))
 
     #if f(a, pol) * f(b, pol) > 0 and iter[0] == 1:
@@ -79,10 +79,11 @@ def falsa_posicion(a, b, tol, pol):
     #else: 
     while e > 10**(-1*tol):
         c = b - (f(b, pol) * (b - a)) / (f(b, pol) - f(a, pol))
-
         x.append(round(c, tol+1))
         fx.append(f(c, pol))
-        e = abs((c - a) / c)
+
+        e = abs((c - a) / 2)
+        
         if f(a, pol) * f(c, pol) < 0:    
             b = c
         else:
@@ -190,7 +191,7 @@ def secante(x0, x1, tol, pol):
     return x, fx, err
 
 
-funcion = 'x**10-1'
+funcion = 'x**3+4**2-10'
 #bis = biseccion(0, 1.4, 3.0, funcion)
 #print(bis[2][-1])
 #graficar_funcion(funcion, bis[2][-1])
@@ -198,7 +199,7 @@ funcion = 'x**10-1'
 #    print((b))
 #    print("\n")
 
-fp = falsa_posicion(0, 2, 3, funcion)
+fp = falsa_posicion(1, 2, 4, funcion)
 print(fp[2][-1])
 graficar_funcion(funcion, fp[2][-1])
 for f in fp:
