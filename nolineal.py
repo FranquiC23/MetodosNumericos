@@ -79,10 +79,11 @@ def falsa_posicion(a, b, tol, pol):
     #else: 
     while e > 10**(-1*tol):
         c = b - (f(b, pol) * (b - a)) / (f(b, pol) - f(a, pol))
+        e = abs((c - a) / 2)
         x.append(round(c, tol+1))
         fx.append(f(c, pol))
 
-        e = abs((c - a) / 2)
+        
         
         if f(a, pol) * f(c, pol) < 0:    
             b = c
@@ -126,8 +127,8 @@ def punto_fijo(x0, tol, pol):
         gx.append(round(g(x0, pol), tol+1))
         fx.append(round(f(x0, pol), tol+1))
         err.append(round(e*100, 4))
-        iter.append(iter[-1] + 1)
-    return iter, x, gx, fx, err
+        
+    return x, gx, fx, err
 
 
 # Metodo de Newton-Raphson
@@ -199,19 +200,19 @@ funcion = 'x**3+4**2-10'
 #    print((b))
 #    print("\n")
 
-fp = falsa_posicion(1, 2, 4, funcion)
-print(fp[2][-1])
-graficar_funcion(funcion, fp[2][-1])
-for f in fp:
-    print(f)
-    print("\n")
-
-#pf = punto_fijo(1.5, 4, funcion)
-#print(pf[1][-1])
-#graficar_funcion(funcion, pf[1][-1])
-#for p in pf:
-#    print(p)
+#fp = falsa_posicion(1, 2, 4, funcion)
+#print(fp[2][-1])
+#graficar_funcion(funcion, fp[2][-1])
+#for f in fp:
+#    print(f)
 #    print("\n")
+
+pf = punto_fijo(1.5, 4, funcion)
+print(pf[0][0])
+graficar_funcion(funcion, pf[0][0])
+for p in pf:
+    print(p)
+    print("\n")
 
 #nr = newton_raphson(0, 10, funcion)
 #print(nr[1][-1])
