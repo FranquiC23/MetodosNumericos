@@ -70,8 +70,8 @@ def falsa_posicion(a, b, tol, pol):
     x.append(round(a, tol+1))
     fx.append(f(a, pol))
 
-    e = 1
-    err.append(round(e*100, 4))
+    e = 100
+    err.append(round(e, 4))
 
     #if f(a, pol) * f(b, pol) > 0 and iter[0] == 1:
     #    print("No hay raiz en el intervalo")
@@ -112,20 +112,20 @@ def punto_fijo(x0, tol, pol):
     err = [] # Lista para guardar los errores en %
 
     tol = int(tol)
-    gx.append(round(g(x0, pol)))
 
+    gx.append(round(g(x0, pol)))
     x.append(round(x0, tol+1))
     fx.append(round(f(x0, pol), 4))
 
-    e = 1
-    err.append(round(e*100, 4))
+    e = 100
+    err.append(round(e, 4))
 
     while e > 10**(-1*tol):
         x0 = gx[-1]
-        e = abs(gx[-1] - x0)
         x.append(round(x0, tol+1))
         gx.append(round(g(x0, pol), tol+1))
         fx.append(round(f(x0, pol), tol+1))
+        e = abs((gx[-1] - x0)/x0)
         err.append(round(e*100, 4))
         
     return x, gx, fx, err
@@ -192,7 +192,7 @@ def secante(x0, x1, tol, pol):
     return x, fx, err
 
 
-funcion = 'x**3+4**2-10'
+funcion = 'np.exp(-x)-x'
 #bis = biseccion(0, 1.4, 3.0, funcion)
 #print(bis[2][-1])
 #graficar_funcion(funcion, bis[2][-1])
@@ -207,7 +207,7 @@ funcion = 'x**3+4**2-10'
 #    print(f)
 #    print("\n")
 
-pf = punto_fijo(1.5, 4, funcion)
+pf = punto_fijo(0, 4, funcion)
 print(pf[0][0])
 graficar_funcion(funcion, pf[0][0])
 for p in pf:
